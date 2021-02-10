@@ -1,17 +1,15 @@
 ######################
 # VPC Endpoint for S3
 ######################
-data "aws_vpc_endpoint_service" "s3" {
-  count = var.create_vpc && var.enable_s3_endpoint ? 1 : 0
-
-  service = "s3"
-}
+data "aws_region" "current" {}
 
 resource "aws_vpc_endpoint" "s3" {
   count = var.create_vpc && var.enable_s3_endpoint ? 1 : 0
 
-  vpc_id       = local.vpc_id
-  service_name = data.aws_vpc_endpoint_service.s3[0].service_name
+  vpc_id            = local.vpc_id
+  service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
+  vpc_endpoint_type = "Gateway"
+  tags              = var.vpc_endpoint_tags
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
