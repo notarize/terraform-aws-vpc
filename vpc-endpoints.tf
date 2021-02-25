@@ -9,7 +9,7 @@ resource "aws_vpc_endpoint" "s3" {
   vpc_id            = local.vpc_id
   service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
   vpc_endpoint_type = "Gateway"
-  tags              = var.vpc_endpoint_tags
+  tags              = local.vpce_tags
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
@@ -47,6 +47,7 @@ resource "aws_vpc_endpoint" "dynamodb" {
 
   vpc_id       = local.vpc_id
   service_name = data.aws_vpc_endpoint_service.dynamodb[0].service_name
+  tags         = local.vpce_tags
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
